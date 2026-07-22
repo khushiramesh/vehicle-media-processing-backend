@@ -1,5 +1,7 @@
 # Vehicle Media Processing Backend
 
+Deployment Link: vehicle-media-processing-backend-production.up.railway.app
+
 ## Overview
 
 Vehicle Media Processing Backend is a production-ready RESTful API built using Node.js and Express.js for automated vehicle image analysis. The application processes uploaded images asynchronously using an in-memory job queue and performs multiple image analysis tasks, including blur detection, brightness analysis, OCR-based text extraction, Indian vehicle number plate recognition, duplicate image detection, screenshot detection, and confidence score calculation.
@@ -238,7 +240,6 @@ Features include:
 
 ---
 
-## Author
 
 **Khushi**
 
