@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Media Processing System</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="header-content">
+      <div class="header-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="6" width="20" height="12" rx="2"/>
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 9v3l2 1"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="header-title">Vehicle Media Processing System</h1>
+        <p class="header-subtitle">Backend + AI Image Analysis</p>
+      </div>
+    </div>
+    <div class="header-status">
+      <span class="status-dot" id="serverStatusDot"></span>
+      <span id="serverStatusText">Checking...</span>
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="container">
+
+    <!-- ===== UPLOAD CARD ===== -->
+    <section class="card upload-card" id="uploadCard">
+      <h2 class="card-title">Upload Image</h2>
+      <p class="card-desc">Select a vehicle image to analyze. Supported formats: JPEG, PNG, GIF, WebP, BMP.</p>
+
+      <div class="upload-area" id="uploadArea">
+        <div class="upload-placeholder" id="uploadPlaceholder">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <p class="upload-text">Click to choose an image</p>
+          <p class="upload-hint">or drag &amp; drop here</p>
+        </div>
+        <img id="imagePreview" class="image-preview hidden" alt="Preview">
+        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/gif,image/webp,image/bmp" hidden>
+      </div>
+
+      <button class="btn btn-primary" id="analyzeBtn" disabled>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a18.5 18.5 0 0 1-7.4 5.4A18.52 18.52 0 0 1 4.6 15"/>
+          <path d="M4.6 9a18.5 18.5 0 0 1 7.4-5.4A18.52 18.52 0 0 1 19.4 9"/>
+        </svg>
+        Analyze Image
+      </button>
+    </section>
+
+    <!-- ===== PROGRESS CARD ===== -->
+    <section class="card progress-card hidden" id="progressCard">
+      <div class="progress-header">
+        <h2 class="card-title">Processing</h2>
+        <span class="progress-status" id="progressStatus">Uploading...</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progressBarFill"></div>
+      </div>
+      <div class="spinner-container">
+        <div class="spinner"></div>
+        <span class="spinner-text" id="spinnerText">Uploading image to server...</span>
+      </div>
+    </section>
+
+    <!-- ===== RESULT CARD ===== -->
+    <section class="card result-card hidden" id="resultCard">
+      <div class="result-header">
+        <h2 class="card-title">Analysis Results</h2>
+        <span class="badge badge-completed" id="statusBadge">Completed</span>
+      </div>
+
+      <!-- Status & File Row -->
+      <div class="result-grid result-grid-3col" id="resultMeta">
+        <div class="result-item">
+          <span class="result-label">Status</span>
+          <span class="result-value" id="rStatus">—</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">File Name</span>
+          <span class="result-value" id="rFileName">—</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">File Size</span>
+          <span class="result-value" id="rFileSize">—</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Image Dimensions</span>
+          <span class="result-value" id="rDimensions">—</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Processing Time</span>
+          <span class="result-value" id="rProcessingTime">—</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Analysis Version</span>
+          <span class="result-value" id="rAnalysisVersion">—</span>
+        </div>
+      </div>
+
+      <hr class="result-divider">
+
+      <!-- Analysis Metrics Grid -->
+      <div class="result-grid result-grid-4col" id="resultAnalysis">
+        <!-- Blur -->
+        <div class="metric-card" id="mBlur">
+          <div class="metric-header">
+            <span class="metric-title">Blur</span>
+            <span class="badge badge-warning" id="bBlur">—</span>
+          </div>
+          <div class="metric-value-wrap">
+            <span class="metric-value" id="vBlurScore">—</span>
+            <span class="metric-unit">score</span>
+          </div>
+        </div>
+        <!-- Brightness -->
+        <div class="metric-card" id="mBrightness">
+          <div class="metric-header">
+            <span class="metric-title">Brightness</span>
+            <span class="badge badge-info" id="bBrightness">—</span>
+          </div>
+          <div class="metric-value-wrap">
+            <span class="metric-value" id="vBrightnessScore">—</span>
+            <span class="metric-unit">score</span>
+          </div>
+        </div>
+        <!-- OCR Text -->
+        <div class="metric-card metric-card-wide" id="mOcr">
+          <div class="metric-header">
+            <span class="metric-title">OCR Text</span>
+          </div>
+          <div class="metric-ocr-text" id="vOcrText">—</div>
+        </div>
+        <!-- Vehicle Number -->
+        <div class="metric-card" id="mVehicle">
+          <div class="metric-header">
+            <span class="metric-title">Vehicle Number</span>
+          </div>
+          <div class="metric-value-wrap">
+            <span class="metric-value metric-value-large" id="vVehicleNumber">—</span>
+          </div>
+        </div>
+        <!-- Valid Number Plate -->
+        <div class="metric-card" id="mPlate">
+          <div class="metric-header">
+            <span class="metric-title">Valid Plate</span>
+            <span class="badge" id="bPlate">—</span>
+          </div>
+        </div>
+        <!-- Duplicate -->
+        <div class="metric-card" id="mDuplicate">
+          <div class="metric-header">
+            <span class="metric-title">Duplicate</span>
+            <span class="badge" id="bDuplicate">—</span>
+          </div>
+        </div>
+        <!-- Screenshot -->
+        <div class="metric-card" id="mScreenshot">
+          <div class="metric-header">
+            <span class="metric-title">Screenshot</span>
+            <span class="badge badge-info" id="bScreenshot">—</span>
+          </div>
+        </div>
+        <!-- Overall Confidence -->
+        <div class="metric-card metric-card-accent" id="mConfidence">
+          <div class="metric-header">
+            <span class="metric-title">Confidence</span>
+          </div>
+          <div class="metric-confidence-wrap">
+            <div class="confidence-ring" id="confidenceRing">
+              <svg viewBox="0 0 36 36" class="confidence-svg">
+                <path class="confidence-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                <path class="confidence-fill" id="confidenceArc" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke-dasharray="0, 100"/>
+                <text x="18" y="20.5" class="confidence-text" id="confidenceText">0%</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reset Button -->
+      <div class="result-actions">
+        <button class="btn btn-secondary" id="resetBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"/>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+          </svg>
+          Analyze Another Image
+        </button>
+      </div>
+    </section>
+
+    <!-- ===== ERROR CARD ===== -->
+    <section class="card error-card hidden" id="errorCard">
+      <div class="error-content">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+        <div>
+          <h3 class="error-title">Error</h3>
+          <p class="error-message" id="errorMessage">Something went wrong.</p>
+        </div>
+      </div>
+      <button class="btn btn-secondary btn-sm" id="errorRetryBtn">Try Again</button>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <p>Vehicle Media Processing System &mdash; Backend + AI Image Analysis</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

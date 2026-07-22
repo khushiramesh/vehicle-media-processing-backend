@@ -17,6 +17,14 @@ app.use(express.urlencoded({ extended: true }));
 // Serve uploaded images statically (optional, for debugging)
 app.use('/uploads', express.static(config.uploadDir));
 
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Root route — serve the frontend
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // ----- API Routes -----
 app.use('/api', routes);
 
