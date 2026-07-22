@@ -2,14 +2,17 @@
 
 ## Overview
 
-Vehicle Media Processing Backend is a RESTful API built using Node.js and Express.js for automated vehicle image analysis. The application processes uploaded images asynchronously using an in-memory job queue and performs multiple analyses including blur detection, brightness evaluation, OCR-based text extraction, Indian vehicle number plate recognition, duplicate image detection, screenshot detection, and confidence score calculation.
+Vehicle Media Processing Backend is a production-ready RESTful API built using Node.js and Express.js for automated vehicle image analysis. The application processes uploaded images asynchronously using an in-memory job queue and performs multiple image analysis tasks, including blur detection, brightness analysis, OCR-based text extraction, Indian vehicle number plate recognition, duplicate image detection, screenshot detection, and confidence score calculation.
+
+The project also includes a lightweight web-based dashboard that allows users to upload vehicle images and view the analysis results directly in the browser.
 
 ---
 
 ## Features
 
 - Asynchronous image processing using an in-memory job queue
-- Image upload with Multer
+- Web-based dashboard for image upload and result visualization
+- Image upload using Multer
 - Blur detection using Variance of Laplacian
 - Brightness analysis
 - OCR-based text extraction using Tesseract.js
@@ -17,8 +20,10 @@ Vehicle Media Processing Backend is a RESTful API built using Node.js and Expres
 - Duplicate image detection using SHA-256 hashing
 - Screenshot detection using image heuristics
 - Overall confidence score calculation
-- SQLite database integration
+- Processing time tracking
+- File metadata extraction
 - Structured logging and retry mechanism
+- SQLite database integration
 - RESTful API architecture
 
 ---
@@ -39,8 +44,13 @@ Vehicle Media Processing Backend is a RESTful API built using Node.js and Expres
 
 ## Project Structure
 
-```
+```text
 vehicle-media-processing-backend/
+│
+├── public/
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
 │
 ├── src/
 │   ├── config/
@@ -64,34 +74,46 @@ vehicle-media-processing-backend/
 
 ## Installation
 
-Clone the repository:
+### Clone the repository
 
 ```bash
 git clone https://github.com/khushiramesh/vehicle-media-processing-backend.git
 ```
 
-Navigate to the project directory:
+### Navigate to the project
 
 ```bash
 cd vehicle-media-processing-backend
 ```
 
-Install dependencies:
+### Install dependencies
 
 ```bash
 npm install
 ```
 
-Start the application:
+### Start the server
 
 ```bash
 npm start
 ```
 
-The server will run at:
+The application will be available at:
+
+**Local**
 
 ```
 http://localhost:3000
+```
+
+---
+
+## Live Deployment
+
+**Render**
+
+```
+https://vehicle-media-processing-backend.onrender.com
 ```
 
 ---
@@ -102,32 +124,32 @@ http://localhost:3000
 |---------|----------|-------------|
 | POST | `/api/upload` | Upload a vehicle image |
 | GET | `/api/status/:id` | Check processing status |
-| GET | `/api/result/:id` | Retrieve analysis result |
+| GET | `/api/result/:id` | Retrieve image analysis result |
 | GET | `/api/health` | Health check |
 
 ---
 
 ## Upload Request
 
-**Endpoint**
+### Endpoint
 
 ```
 POST /api/upload
 ```
 
-**Content-Type**
+### Content Type
 
 ```
 multipart/form-data
 ```
 
-**Body**
+### Request Body
 
 | Key | Type |
 |-----|------|
 | image | File |
 
-**Sample Response**
+### Sample Response
 
 ```json
 {
@@ -162,24 +184,43 @@ multipart/form-data
 
 ## Image Analysis Pipeline
 
-The backend performs the following analysis on every uploaded image:
+Each uploaded image goes through the following processing pipeline:
 
-- Blur Detection
-- Brightness Analysis
-- OCR-based Text Extraction
-- Vehicle Number Plate Extraction
-- Number Plate Validation
-- Duplicate Detection
-- Screenshot Detection
-- Confidence Score Calculation
+1. Image Upload
+2. Background Queue Processing
+3. Blur Detection
+4. Brightness Analysis
+5. OCR Text Extraction
+6. Vehicle Number Plate Detection
+7. Number Plate Validation
+8. Duplicate Image Detection
+9. Screenshot Detection
+10. Confidence Score Calculation
+11. Result Storage
+12. API Response
+
+---
+
+## Web Dashboard
+
+The project includes a simple frontend dashboard served by Express.js.
+
+Features include:
+
+- Upload vehicle images
+- Preview selected image
+- Track processing status
+- View analysis results
+- Display OCR output
+- Responsive user interface
 
 ---
 
 ## Performance
 
-- Average processing time: 1–2 seconds per image
-- Queue concurrency: 2 jobs
-- Maximum upload size: 10 MB
+- Average processing time: **2–6 seconds** (depending on image size and OCR complexity)
+- Queue concurrency: **2 jobs**
+- Maximum upload size: **10 MB**
 - Asynchronous background processing
 
 ---
@@ -191,12 +232,14 @@ The backend performs the following analysis on every uploaded image:
 - Docker support
 - JWT Authentication
 - Cloud storage integration
-- Machine Learning-based vehicle classification
+- Machine Learning-based vehicle detection
+- Automatic license plate localization using OpenCV
+- Higher OCR accuracy using deep learning models
 
 ---
 
 ## Author
 
-Khushi 
+**Khushi**
 
-Backend + AI Engineering Assignment
+Backend + AI Engineering Take-Home Assignment
