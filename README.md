@@ -1,6 +1,6 @@
 # Vehicle Media Processing Backend
 
-Deployment Link: vehicle-media-processing-backend-production.up.railway.app
+
 
 ## Overview
 
